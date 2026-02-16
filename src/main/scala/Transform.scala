@@ -1,7 +1,10 @@
-import java.util.Date
+package transform
 
-def transformDate(date : String) : Date =
-    Date.parse(date)
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-def getAge(date: Date, current: Current) : Int =
-    date.getYear() - current.getYear()
+def transformDate(date : String) : LocalDate =
+    LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+def getAge(date: LocalDate, current: LocalDate) : Int =
+    current.getYear() - date.getYear()
