@@ -1,5 +1,10 @@
-@main def hello(): Unit =
-  println("Hello world!")
-  println(msg)
+object MainApp {
 
-def msg = "I was compiled by Scala 3. :)"
+  def main(args: Array[String]): Unit = {
+
+    val data = ExtractSequential.extract("anime.csv")
+
+    DemoTransform.process(data)
+
+  }
+}
