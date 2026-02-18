@@ -61,41 +61,5 @@ object ExtractSequential {
           cleanString(cols(11))
         )
       }
-
-    // import java.io.PrintWriter
-
-    // val writer = new PrintWriter("output.json")
-
-    // writer.println("[")   // เปิด array
-
-    // animeList.zipWithIndex.foreach { case (a, index) =>
-
-    //   val json =
-    //     s"""
-    //       |  {
-    //       |    "animeId": ${a.animeId},
-    //       |    "title": "${a.title}",
-    //       |    "score": ${a.score},
-    //       |    "rank": ${a.rank},
-    //       |    "popularity": ${a.popularity},
-    //       |    "members": ${a.members},
-    //       |    "synopsis": "${a.synopsis}",
-    //       |    "startDate": "${a.startDate}",
-    //       |    "endDate": "${a.endDate}",
-    //       |    "animeType": "${a.animeType}",
-    //       |    "episodes": ${a.episodes},
-    //       |    "imageUrl": "${a.imageUrl}"
-    //       |  }
-    //       |""".stripMargin
-
-    //   if (index < animeList.size - 1)
-    //     writer.println(json + ",")
-    //   else
-    //     writer.println(json)
-    // }
-
-    // writer.println("]")   // ปิด array
-
-    // writer.close()
   }
 }
