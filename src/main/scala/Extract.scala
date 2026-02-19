@@ -1,3 +1,5 @@
+package extract
+
 import scala.io.Source
 import scala.collection.parallel.CollectionConverters.*
 
