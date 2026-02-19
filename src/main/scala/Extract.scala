@@ -39,7 +39,7 @@ object Extract {
       catch { case _: Exception => 0 }
   }
 
-  def ExtractParallel(path: String): List[Anime] = {
+  def extractParallel(path: String): List[Anime] = {
 
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
@@ -61,10 +61,11 @@ object Extract {
         toIntOption(cols(10)),
         cleanString(cols(11))
       )
-    }
+    }.toList
+    result
   }
   
-  def ExtractSequential(path: String): List[Anime] = {
+  def extractSequential(path: String): List[Anime] = {
 
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
@@ -86,6 +87,6 @@ object Extract {
         toIntOption(cols(10)),
         cleanString(cols(11))
       )
-    }
+    }.toList
   }
 }
