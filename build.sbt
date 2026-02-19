@@ -8,5 +8,5 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.1.0"
+    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
   )
