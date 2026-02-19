@@ -1,6 +1,7 @@
 import scala.io.Source
+import scala.collection.parallel.CollectionConverters.*
 
-object ExtractSequential {
+object Extract {
 
   case class Anime(
     animeId: Int,
@@ -38,28 +39,53 @@ object ExtractSequential {
       catch { case _: Exception => 0 }
   }
 
-    def extract(path: String): List[Anime] = {
+  def ExtractParallel(path: String): List[Anime] = {
 
-      val lines = Source.fromFile(path).getLines().toList
-      val data = lines.tail
+    val lines = Source.fromFile(path).getLines().toList
+    val data = lines.tail
 
-      data.map { line =>
-        val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+    val result = data.par.map { line =>
+      val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
 
-        Anime(
-          toIntOption(cols(0)),
-          cleanString(cols(1)),
-          toDoubleOption(cols(2)),
-          toIntOption(cols(3)),
-          toIntOption(cols(4)),
-          toIntOption(cols(5)),
-          cleanString(cols(6)),
-          cleanString(cols(7)),
-          cleanString(cols(8)),
-          cleanString(cols(9)),
-          toIntOption(cols(10)),
-          cleanString(cols(11))
-        )
-      }
+      Anime(
+        toIntOption(cols(0)),
+        cleanString(cols(1)),
+        toDoubleOption(cols(2)),
+        toIntOption(cols(3)),
+        toIntOption(cols(4)),
+        toIntOption(cols(5)),
+        cleanString(cols(6)),
+        cleanString(cols(7)),
+        cleanString(cols(8)),
+        cleanString(cols(9)),
+        toIntOption(cols(10)),
+        cleanString(cols(11))
+      )
+    }
+  }
+  
+  def ExtractSequential(path: String): List[Anime] = {
+
+    val lines = Source.fromFile(path).getLines().toList
+    val data = lines.tail
+
+    data.map { line =>
+      val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+
+      Anime(
+        toIntOption(cols(0)),
+        cleanString(cols(1)),
+        toDoubleOption(cols(2)),
+        toIntOption(cols(3)),
+        toIntOption(cols(4)),
+        toIntOption(cols(5)),
+        cleanString(cols(6)),
+        cleanString(cols(7)),
+        cleanString(cols(8)),
+        cleanString(cols(9)),
+        toIntOption(cols(10)),
+        cleanString(cols(11))
+      )
+    }
   }
 }
