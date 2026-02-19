@@ -1,6 +1,6 @@
-object MainApp {
+object MainApp:
 
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit =
 
     val path = "anime.csv"
 
@@ -11,5 +11,3 @@ object MainApp {
     println("\nRunning Sequential...")
     val seqData = Extract.extractSequential(path)
     val seqResult = DemoTransform.process(seqData)
-  }
-}

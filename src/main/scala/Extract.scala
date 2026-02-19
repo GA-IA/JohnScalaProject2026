@@ -1,7 +1,7 @@
 import scala.io.Source
 import scala.collection.parallel.CollectionConverters.*
 
-object Extract {
+object Extract:
 
   case class Anime(
     animeId: Int,
@@ -18,33 +18,29 @@ object Extract {
     imageUrl: String
   )
 
-  def cleanString(s: String): String = {
+  def cleanString(s: String): String =
     val cleaned = s.trim.replace("\"", "")
-    if (cleaned.isEmpty) "null" else cleaned
-  }
+    if cleaned.isEmpty then "null" else cleaned
 
-  def toIntOption(s: String): Int = {
+  def toIntOption(s: String): Int =
     val cleaned = s.trim
-    if (cleaned.isEmpty) 0
+    if cleaned.isEmpty then 0
     else
       try cleaned.toInt
-      catch { case _: Exception => 0 }
-  }
+      catch case _: Exception => 0
 
-  def toDoubleOption(s: String): Double = {
+  def toDoubleOption(s: String): Double =
     val cleaned = s.trim
-    if (cleaned.isEmpty) 0
+    if cleaned.isEmpty then 0
     else
       try cleaned.toDouble
-      catch { case _: Exception => 0 }
-  }
+      catch case _: Exception => 0
 
-  def extractParallel(path: String): List[Anime] = {
-
+  def extractParallel(path: String): List[Anime] =
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
 
-    val result = data.par.map { line =>
+    data.par.map { line =>
       val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
 
       Anime(
@@ -62,11 +58,8 @@ object Extract {
         cleanString(cols(11))
       )
     }.toList
-    result
-  }
-  
-  def extractSequential(path: String): List[Anime] = {
 
+  def extractSequential(path: String): List[Anime] =
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
 
@@ -88,5 +81,3 @@ object Extract {
         cleanString(cols(11))
       )
     }.toList
-  }
-}
