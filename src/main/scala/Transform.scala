@@ -1,22 +1,20 @@
 package transform
 
-import extract._
+import extract.Extract._
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object Transform:
+object DateTransform:
   def transformDate(date : String) : LocalDate =
-    LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    date match
+      case "null" => LocalDate.now()
+      case _ => LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
   def getAge(date: LocalDate, current: LocalDate) : Int =
       current.getYear() - date.getYear()
 
-// object DemoTransform:
-//   def process(data: List[Extract.Anime]): List[Extract.Anime] =
-//     // 🔹 2. เรียงคะแนนจากมากไปน้อย
-//     val sorted = filtered.sortBy(anime => -anime.score)
+  def mapAge(list: List[Anime], current: LocalDate) : List[Int] =
+    list.map(anime => getAge(transformDate(anime.startDate), current))
 
-//     // 🔹 3. แสดงผล
-//     println("===== Transform Result =====")
-//     sorted.foreach(println)
-//     sorted
+  def sortScore(list: List[Anime]): List[Anime] =
+    list.sortBy(_.score)

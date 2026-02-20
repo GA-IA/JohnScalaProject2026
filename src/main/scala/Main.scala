@@ -1,5 +1,6 @@
 import extract._
 import transform._
+import java.time.LocalDate
 
 object MainApp:
 
@@ -13,4 +14,7 @@ object MainApp:
 
     println("\nRunning Sequential...")
     val seqData = Extract.extractSequential(path)
-    // val seqResult = DemoTransform.process(seqData)
+    val ageMap = DateTransform.mapAge(seqData, LocalDate.now())
+    println(seqData.head)
+    println(DateTransform.sortScore(seqData).head)
+    
