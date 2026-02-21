@@ -10,11 +10,15 @@ object MainApp:
 
     println("\nRunning Parallel...")
     val parData = Extract.extractParallel(path)
+    val t = System.nanoTime();
+    DateTransform.sortScorePar(parData)
+    println((System.nanoTime() - t) / 1000000f)
     // val parResult = DemoTransform.process(parData)
 
     println("\nRunning Sequential...")
     val seqData = Extract.extractSequential(path)
     val ageMap = DateTransform.mapAge(seqData, LocalDate.now())
-    println(seqData.head)
-    println(DateTransform.sortScore(seqData).head)
+    val y = System.nanoTime();
+    DateTransform.sortScore(seqData)
+    println((System.nanoTime() - y) / 1000000f)
     
