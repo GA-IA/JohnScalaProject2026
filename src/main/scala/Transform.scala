@@ -3,7 +3,8 @@ package transform
 import extract.Extract._
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import scala.collection.parallel.CollectionConverters._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, ExecutionContext}
 
 object DateTransform:
   def transformDate(date : String) : LocalDate =
@@ -17,11 +18,16 @@ object DateTransform:
   def mapAge(list: List[Anime], current: LocalDate) : List[Int] =
     list.map(anime => getAge(transformDate(anime.startDate), current))
 
-  def mapAgePar(list: List[Anime], current: LocalDate) : List[Int] =
-    list.par.map(anime => getAge(transformDate(anime.startDate), current)).toList
+  def mapAgeFuture(list: List[Anime], current: LocalDate): Future[List[Int]] =
+    Future.sequence:
+      list.map(anime =>
+        Future:
+          getAge(transformDate(anime.startDate), current)
+      )
 
   def sortScore(list: List[Anime]): List[Anime] =
     list.sortBy(_.score)
 
-  def sortScorePar(list: List[Anime]): List[Anime] =
-    list.par.seq.sortBy(_.score).toList
+  def sortScoreFuture(list: List[Anime]): Future[List[Anime]] =
+    Future:
+      list.sortBy(_.score)
