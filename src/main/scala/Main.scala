@@ -8,7 +8,7 @@ object MainApp:
 
   def main(args: Array[String]): Unit =
 
-    val path = "anime.csv"
+    val path = "test.csv"
 
     println("\nRunning Future...")
     val start = System.nanoTime()
@@ -28,5 +28,6 @@ object MainApp:
     println("\nRunning Sequential...")
     val seqStart = System.nanoTime()
     val seqData = Extract.extractSequential(path)
+
     DateTransform.sortScore(seqData)
     println((System.nanoTime() - seqStart) / 1000000f)
