@@ -14,8 +14,8 @@ object MainApp:
     val start = System.nanoTime()
     val result =
       Extract.extractFuture(path)
-        .map(data =>
-          DateTransform.quartiles(data)
+        .flatMap(data =>
+          DateTransform.quartilesFuture(data)
         )
     result.onComplete:
       case Success(q) =>
