@@ -1,5 +1,7 @@
 import Extract.Anime
-import scala.collection.parallel.CollectionConverters.*
+import scala.concurrent.{Future, Await}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 object DemoTransform:
 
@@ -26,6 +28,17 @@ object DemoTransform:
   }
 
   // 🔹 2. ลบข้อมูลซ้ำแบบ Parallel (กระจายงานให้ CPU หลาย Core)
-  def removeDuplicatesParallel(data: List[Anime]): List[Anime] = {
-    data.par.distinct.toList
-  }
+  def removeDuplicatesParallel(data: List[Anime], cores: Int): List[Anime] =
+    val chunkSize = math.max(1, data.size / cores)
+    val chunks = data.grouped(chunkSize).toList
+
+    // โยนเข้า Future
+    val futureChunks: List[Future[List[Anime]]] = chunks.map: chunk =>
+      Future(chunk.distinct)
+
+    // รอผลและรวมร่าง
+    val aggregatedFuture = Future.sequence(futureChunks).map(_.flatten)
+    val mergedList = Await.result(aggregatedFuture, Duration.Inf)
+    
+    // ลบตัวซ้ำตอนรวมร่างอีกรอบ
+    mergedList.distinct
