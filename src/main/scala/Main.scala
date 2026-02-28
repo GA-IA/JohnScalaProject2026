@@ -8,17 +8,18 @@ object MainApp:
 
   def main(args: Array[String]): Unit =
 
-    val path = "test.csv"
+    val path = "anime.csv"
 
     println("\nRunning Future...")
     val start = System.nanoTime()
     val result =
       Extract.extractFuture(path)
-        .flatMap(data =>
-          DateTransform.sortScoreFuture(data)
+        .map(data =>
+          DateTransform.quartiles(data)
         )
     result.onComplete:
-      case Success(_) =>
+      case Success(q) =>
+        println("Quartiles (Future): " + q)
         println((System.nanoTime() - start) / 1000000f)
       case Failure(e) =>
         println(e.getMessage)
@@ -28,6 +29,7 @@ object MainApp:
     println("\nRunning Sequential...")
     val seqStart = System.nanoTime()
     val seqData = Extract.extractSequential(path)
-
-    DateTransform.sortScore(seqData)
+    
+    val qSeq = DateTransform.quartiles(seqData)
+    println("Quartiles (Sequential): " + qSeq)
     println((System.nanoTime() - seqStart) / 1000000f)
