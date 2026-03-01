@@ -1,5 +1,9 @@
+package extract
+
 import scala.io.Source
-import scala.collection.parallel.CollectionConverters.*
+import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 object Extract:
 
@@ -36,34 +40,35 @@ object Extract:
       try cleaned.toDouble
       catch case _: Exception => 0
 
-  def extractParallel(path: String): List[Anime] =
+  def extractFuture(path: String): Future[List[Anime]] =
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
 
-    data.par.map { line =>
-      val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+    val futures = data.map: line =>
+      Future:
+        val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
 
-      Anime(
-        toIntOption(cols(0)),
-        cleanString(cols(1)),
-        toDoubleOption(cols(2)),
-        toIntOption(cols(3)),
-        toIntOption(cols(4)),
-        toIntOption(cols(5)),
-        cleanString(cols(6)),
-        cleanString(cols(7)),
-        cleanString(cols(8)),
-        cleanString(cols(9)),
-        toIntOption(cols(10)),
-        cleanString(cols(11))
-      )
-    }.toList
+        Anime(
+          toIntOption(cols(0)),
+          cleanString(cols(1)),
+          toDoubleOption(cols(2)),
+          toIntOption(cols(3)),
+          toIntOption(cols(4)),
+          toIntOption(cols(5)),
+          cleanString(cols(6)),
+          cleanString(cols(7)),
+          cleanString(cols(8)),
+          cleanString(cols(9)),
+          toIntOption(cols(10)),
+          cleanString(cols(11))
+        )
+    Future.sequence(futures)
 
   def extractSequential(path: String): List[Anime] =
     val lines = Source.fromFile(path).getLines().toList
     val data = lines.tail
 
-    data.map { line =>
+    data.map: line =>
       val cols = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
 
       Anime(
@@ -80,4 +85,3 @@ object Extract:
         toIntOption(cols(10)),
         cleanString(cols(11))
       )
-    }.toList
