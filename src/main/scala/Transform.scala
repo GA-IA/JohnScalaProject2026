@@ -137,3 +137,40 @@ object DateTransform:
         val q3 = median(upperHalf)
 
         List(q1, q2, q3)
+  def percentile(list: List[Anime], p: Double): Double =
+    val sorted = sortScore(list)
+    val scores = sorted.map(_.score)
+    val n = scores.length
+
+    if n == 0 then 0.0
+    else if p <= 0 then scores.head
+    else if p >= 100 then scores.last
+    else
+      val rank = (p / 100.0) * (n - 1)
+      val lowerIndex = rank.toInt
+      val upperIndex = lowerIndex + 1
+      val weight = rank - lowerIndex
+
+      if upperIndex < n then
+        scores(lowerIndex) * (1 - weight) + scores(upperIndex) * weight
+      else
+        scores(lowerIndex)
+
+  def percentileFuture(list: List[Anime], p: Double): Future[Double] =
+    sortScoreFuture(list).map: sorted =>
+      val scores = sorted.map(_.score)
+      val n = scores.length
+
+      if n == 0 then 0.0
+      else if p <= 0 then scores.head
+      else if p >= 100 then scores.last
+      else
+        val rank = (p / 100.0) * (n - 1)
+        val lowerIndex = rank.toInt
+        val upperIndex = lowerIndex + 1
+        val weight = rank - lowerIndex
+
+        if upperIndex < n then
+          scores(lowerIndex) * (1 - weight) + scores(upperIndex) * weight
+        else
+          scores(lowerIndex)
