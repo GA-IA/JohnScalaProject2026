@@ -34,7 +34,7 @@ object DemoTransform:
   }
 
   // 🔹 2. ลบข้อมูลซ้ำแบบ Parallel (กระจายงานให้ CPU หลาย Core)
-  def removeDuplicatesParallel(data: List[Anime], cores: Int): List[Anime] =
+  def removeDuplicatesParallel(data: List[Anime], cores: Int): Future[List[Anime]] =
     val chunkSize = math.max(1, data.size / cores)
     val chunks = data.grouped(chunkSize).toList
 
@@ -44,10 +44,11 @@ object DemoTransform:
 
     // รอผลและรวมร่าง
     val aggregatedFuture = Future.sequence(futureChunks).map(_.flatten)
-    val mergedList = Await.result(aggregatedFuture, Duration.Inf)
+    aggregatedFuture
+    // val mergedList = Await.result(aggregatedFuture, Duration.Inf)
     
-    // ลบตัวซ้ำตอนรวมร่างอีกรอบ
-    mergedList.distinct
+    // // ลบตัวซ้ำตอนรวมร่างอีกรอบ
+    // mergedList.distinct
 
 object DateTransform:
   def transformDate(date : String) : LocalDate =

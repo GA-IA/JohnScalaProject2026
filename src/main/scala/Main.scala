@@ -8,7 +8,7 @@ import transform.DemoTransform._
 import transform.DateTransform._
 
 def processSequential(inputPath: String, outputPath: String, currentDate: LocalDate): Unit =
-    val data = Extract.extractSequential(inputPath)
+    val data = removeDuplicatesSequential(Extract.extractSequential(inputPath))
     val ages = mapAge(data, currentDate)
 
     val jsonList = data.zip(ages).map { case (anime, age) =>
@@ -40,7 +40,7 @@ def processSequential(inputPath: String, outputPath: String, currentDate: LocalD
 
 
 def processConcurrent(inputPath : String, outputPath : String, currentDate : LocalDate): Unit =
-    val futureData = Extract.extractFuture(inputPath)
+    val futureData = removeDuplicatesParallel(Await.result(Extract.extractFuture(inputPath), 5.minutes), 4)
 
     val result = futureData.map: list =>
         val ages = Await.result(mapAgeFuture(list, currentDate), 5.minutes)
