@@ -51,22 +51,28 @@ object DemoTransform:
     // mergedList.distinct
 
 object DateTransform:
-  def transformDate(date : String) : LocalDate =
-    date match
-      case "null" => LocalDate.now()
-      case _ => LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+  def transformDate(date : String) : Option[LocalDate] =
+    try
+      Some(LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+    catch
+      case e: Exception => None
 
   def getAge(date: LocalDate, current: LocalDate) : Int =
       current.getYear() - date.getYear()
 
   def mapAge(list: List[Anime], current: LocalDate) : List[Int] =
-    list.map(anime => getAge(transformDate(anime.startDate), current))
+    list.map(anime => transformDate(anime.startDate) match
+      case Some(date) => getAge(date, current)
+      case None => -1
+    )
 
   def mapAgeFuture(list: List[Anime], current: LocalDate): Future[List[Int]] =
     Future.sequence:
       list.map(anime =>
         Future:
-          getAge(transformDate(anime.startDate), current)
+          transformDate(anime.startDate) match
+            case Some(date) => getAge(date, current)
+            case None => -1
       )
 
   def sortScore(list: List[Anime]): List[Anime] =

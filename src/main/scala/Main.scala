@@ -75,8 +75,8 @@ def processConcurrent(inputPath : String, outputPath : String, currentDate : Loc
 
     println("Saved to anime.json successfully.")
 
-@main def main(processType: Int): Unit =
-    val inputPath = "anime.csv"
+@main def main(processType: Int, file: String): Unit =
+    val inputPath = file
     val outputPath = "anime.json"
 
     val currentDate = LocalDate.now()
