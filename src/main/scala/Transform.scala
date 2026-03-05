@@ -83,7 +83,7 @@ object DateTransform:
   def mapAge(list: List[Anime], current: LocalDate) : List[Int] =
     list.map(anime => transformDate(anime.startDate) match
       case Some(date) => getAge(date, current)
-      case None => -1
+      case None => 0
     )
 
   def mapAgeFuture(list: List[Anime], current: LocalDate): Future[List[Int]] =
@@ -92,7 +92,7 @@ object DateTransform:
         Future:
           transformDate(anime.startDate) match
             case Some(date) => getAge(date, current)
-            case None => -1
+            case None => 0
       )
 
   def sortScore(list: List[Anime]): List[Anime] =

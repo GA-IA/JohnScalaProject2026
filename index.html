@@ -1,0 +1,65 @@
+<html>
+<body>
+    <h1>Dataset Processor</h1>
+    <form method="POST">
+        <h2>File Name : <input name="file">
+        Process Type : 
+        <select name="processType">
+            <option value="0">Sequential</option>
+            <option value="1">Concurrent</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Run</button>
+    </form>
+</body>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+    body{
+        padding: 50px;
+        text-align: center;
+        font-family: "Nunito", sans-serif;
+        }
+
+    h1{
+        font-size: 40px;
+        font-weight: 1000;
+        margin-bottom: 50px;
+    }
+
+    form{
+        justify-self: center;
+        padding: 20px;
+        background-color: rgb(173, 199, 216);
+        width: 800px;
+        border-radius: 15px;
+    }
+
+    input{
+        padding: 8px;
+        border-radius: 6px;
+        margin-right: 14px;
+    }
+
+    select{
+        padding: 8px 20px;
+        border-radius: 6px;
+        margin-right: 14px;
+    }
+
+    button{
+        padding: 9px 25px;
+        border-radius: 6px;
+        background-color: rgb(212, 0, 0);
+        color: #ffffff;
+        border: none;
+        font-size: 17px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+    }
+
+    button::hover{
+        background-color: rgb(172, 0, 0);
+    }
+</style>
+</html>
