@@ -38,7 +38,7 @@ object DemoTransform:
   }
 
   // 🔹 2. ลบข้อมูลซ้ำแบบ Parallel (กระจายงานให้ CPU หลาย Core)
-  def removeDuplicatesParallel(data: List[Anime], cores: Int): Future[List[Anime]] =
+  def removeDuplicatesParallel(data: List[Anime], cores: Int): List[Anime] =
     val chunkSize = math.max(1, data.size / cores)
     val chunks = data.grouped(chunkSize).toList
 
@@ -48,11 +48,10 @@ object DemoTransform:
 
     // รอผลและรวมร่าง
     val aggregatedFuture = Future.sequence(futureChunks).map(_.flatten)
-    aggregatedFuture
-    // val mergedList = Await.result(aggregatedFuture, Duration.Inf)
+    val mergedList = Await.result(aggregatedFuture, Duration.Inf)
     
     // // ลบตัวซ้ำตอนรวมร่างอีกรอบ
-    // mergedList.distinct
+    mergedList.distinct
 
   //ลบข้อมูลซ้ำโดยเช็คแค่ animeId (Parallel ด้วย Future)
   def removeDuplicatesIDParallel(data: List[Anime], cores: Int): List[Anime] =
@@ -69,6 +68,28 @@ object DemoTransform:
     
     // สำคัญ: ตอนเอากลับมารวมร่างกัน ต้องลบซ้ำด้วย animeId อีกรอบ
     mergedList.distinctBy(_.animeId)
+  
+  def cleanStringSequential(data: List[Anime]): List[Anime] =
+    data.map { anime =>
+      anime.copy(
+        title = anime.title.replaceAll("[\\p{Cntrl}]", "").replace("\"", ""),
+        synopsis = anime.synopsis.replaceAll("[\\p{Cntrl}]", "").replace("\"", "")
+      )
+    }
+  def cleanStringParallel(data: List[Anime], cores: Int): Future[List[Anime]] =
+    val chunkSize = math.max(1, data.size / cores)
+    val chunks = data.grouped(chunkSize).toList
+
+    val futureChunks = chunks.map: chunk =>
+      Future:
+        chunk.map: anime =>
+          anime.copy(
+            title = anime.title.replaceAll("[\\p{Cntrl}]", "").replace("\"", ""),
+            synopsis = anime.synopsis.replaceAll("[\\p{Cntrl}]", "").replace("\"", "")
+          )
+
+    val aggregatedFuture = Future.sequence(futureChunks).map(_.flatten)
+    aggregatedFuture
 
 object DateTransform:
   def transformDate(date : String) : Option[LocalDate] =
