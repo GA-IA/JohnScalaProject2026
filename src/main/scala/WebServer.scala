@@ -6,7 +6,7 @@ import java.time.LocalDate
 import scala.io.Source
 import ujson.*
 
-@main def webApp(): Unit =
+def webApp(): Unit =
   val server = HttpServer.create(new InetSocketAddress(3000), 0)
 
   server.createContext("/", new HttpHandler:

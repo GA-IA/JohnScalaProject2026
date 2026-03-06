@@ -79,4 +79,20 @@ def processConcurrent(inputPath: String, outputPath: String, currentDate: LocalD
     saveToJson(finalJson, outputPath)
 
     finalJson   // 👈 return JSON
+
+@main def main(isWebServer : Boolean, file: String, mode: Int): Unit =
+  if isWebServer then
+    webApp()
+  else
+    mode match
+      case 0 => 
+        val start = System.currentTimeMillis()
+        processSequential(file, "file.json", LocalDate.now())
+        println(System.currentTimeMillis() - start)
+      case 1 => 
+        val start = System.currentTimeMillis()
+        processConcurrent(file, "file.json", LocalDate.now())
+        println(System.currentTimeMillis() - start)
+      case _ => println("Invalid mode")
+    
  
